@@ -1,0 +1,67 @@
+type FoodIntake = record {
+  id : text;
+  type_of_food : text;
+  updated_at : opt nat64;
+  water_intake : text;
+  portion_size : text;
+  created_date : nat64;
+  number_of_calories : text;
+};
+type FoodIntakePayload = record {
+  type_of_food : text;
+  water_intake : text;
+  portion_size : text;
+  number_of_calories : text;
+};
+type User = record {
+  id : text;
+  updated_at : opt nat64;
+  name : text;
+  created_date : nat64;
+};
+type UserInfo = record {
+  id : text;
+  age : text;
+  weight : text;
+  height : text;
+  createdAt : nat64;
+  updatedAt : opt nat64;
+};
+type UserInfoPayload = record { age : text; weight : text; height : text };
+type Workout = record {
+  id : text;
+  date : text;
+  createdAt : nat64;
+  updatedAt : opt nat64;
+  number_of_reps : text;
+  distance_covered : text;
+  calories_burned : text;
+  workoutType : text;
+};
+type WorkoutPayload = record {
+  date : text;
+  number_of_reps : text;
+  distance_covered : text;
+  calories_burned : text;
+  workoutType : text;
+};
+type _AzleResult = variant { Ok : FoodIntake; Err : text };
+type _AzleResult_1 = variant { Ok : UserInfo; Err : text };
+type _AzleResult_2 = variant { Ok : Workout; Err : text };
+type _AzleResult_3 = variant { Ok : User; Err : text };
+service : () -> {
+  addFoodIntake : (FoodIntakePayload) -> (_AzleResult);
+  addUserInfo : (text, UserInfoPayload) -> (_AzleResult_1);
+  addWorkout : (WorkoutPayload) -> (_AzleResult_2);
+  deleteFoodIntake : (text) -> (_AzleResult);
+  deleteWorkout : (text) -> (_AzleResult_2);
+  getAllFoodtake : () -> (vec FoodIntake) query;
+  getAllWorkouts : () -> (vec Workout) query;
+  getFoodIntakeById : (text) -> (_AzleResult) query;
+  getUserInfo : (text) -> (_AzleResult_1) query;
+  getWorkoutById : (text) -> (_AzleResult_2) query;
+  initializeUser : (text) -> (_AzleResult_3);
+  updateFoodIntake : (text, FoodIntakePayload) -> (_AzleResult);
+  updateUserInfo : (text, UserInfoPayload) -> (_AzleResult_1);
+  updateWorkout : (text, WorkoutPayload) -> (_AzleResult_2);
+}

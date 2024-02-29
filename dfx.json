@@ -1,0 +1,14 @@
+{
+  "canisters": {
+    "fitness_tracking_ICP": {
+      "type": "custom",
+      "main": "src/index.ts",
+      "candid": "src/index.did",
+      "build": "npx azle fitness_tracking_ICP",
+      "root": "src",
+      "ts": "src/index.ts",
+      "wasm": ".azle/fitness_tracking_ICP/fitness_tracking_ICP.wasm",
+      "gzip": true
+    }
+  }
+}
