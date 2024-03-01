@@ -61,6 +61,7 @@ service : () -> {
   getUserInfo : (text) -> (_AzleResult_1) query;
   getWorkoutById : (text) -> (_AzleResult_2) query;
   initializeUser : (text) -> (_AzleResult_3);
+  searchWorkoutByName : (text) -> (vec Workout) query;
   updateFoodIntake : (text, FoodIntakePayload) -> (_AzleResult);
   updateUserInfo : (text, UserInfoPayload) -> (_AzleResult_1);
   updateWorkout : (text, WorkoutPayload) -> (_AzleResult_2);

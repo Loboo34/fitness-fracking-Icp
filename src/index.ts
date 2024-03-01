@@ -222,6 +222,15 @@ export function getWorkoutById(id: string): Result<Workout, string> {
   });
 }
 
+//function to search for workout by name
+$query;
+export function searchWorkoutByName(name: string): Vec<Workout> {
+  return workOutStorage.values().filter((workout) =>
+    workout.workoutType.toLowerCase().includes(name.toLowerCase())
+  );
+}
+
+
 $update; //function to delete workout
 export function deleteWorkout(id: string): Result<Workout, string> {
   return match(workOutStorage.get(id), {
