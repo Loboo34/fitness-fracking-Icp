@@ -21,7 +21,7 @@ type User = Record<{
   updated_at: Opt<nat64>;
 }>;
 
-//user info record
+//info about the user
 type UserInfo = Record<{
   id: string;
   age: string;
@@ -30,6 +30,7 @@ type UserInfo = Record<{
   createdAt: nat64;
   updatedAt: Opt<nat64>;
 }>;
+
 
 type Workout = Record<{
   id: string;
@@ -84,14 +85,14 @@ type FoodIntakePayload = Record<{
   water_intake: string;
 }>;
 
-// Creating instances of StableBTreeMap for each entity type
+// instances of StableBTreeMap for each entity type
 const userStorage = new StableBTreeMap<string, User>(0, 44, 512);
 const userInfoStorage = new StableBTreeMap<string, UserInfo>(1, 44, 512);
 const workOutStorage = new StableBTreeMap<string, Workout>(2, 44, 512);
 
 const foodIntakeStorage = new StableBTreeMap<string, FoodIntake>(3, 44, 512);
 
-//function to initialize user
+//function to create user
 $update;
 export function initializeUser(name: string): Result<User, string> {
   if (!name) {
@@ -110,7 +111,7 @@ export function initializeUser(name: string): Result<User, string> {
     return Result.Err<User, string>("Error while adding user");
   }
 }
-//function to add user info 
+//function to add user info(height, weight, age)
 $update;
 export function addUserInfo(
   id: string,
@@ -142,7 +143,7 @@ export function getUserInfo(id: string): Result<UserInfo, string> {
   });
 }
 
-$update;
+
 //function to update user info
 export function updateUserInfo(
   id: string,
@@ -162,34 +163,38 @@ export function updateUserInfo(
   });
 }
 
- //Create a new Workout
- $update;
- export function addWorkout(payload: WorkoutPayload): Result<Workout, string> {
-   if (!payload.workoutType) {
-     return Result.Err<Workout, string>("Invalid");
-   }
-   try {
-     const newWorkout: Workout = {
-       id: uuidv4(),
-       workoutType: payload.workoutType,
-       number_of_reps: payload.number_of_reps || "0",
-       calories_burned: payload.calories_burned,
-       distance_covered: payload.distance_covered || "0",
-      date: payload.date,
-      createdAt: ic.time(),
-      updatedAt: Opt.None,
-    };
-    workOutStorage.insert(newWorkout.id, newWorkout);
-    return Result.Ok(newWorkout);
-  } catch (error) {
-    return Result.Err<Workout, string>(
-      "Problem occured while adding new workout"
-    );
+
+ //Function to Create a new Workout 
+  $update;
+  export function addWorkoutByUserId(
+    id: string,
+    payload: WorkoutPayload
+  ): Result<Workout, string> {
+    if (!payload.workoutType) {
+      return Result.Err<Workout, string>("Invalid");
+    }
+    try {
+      const newWorkout: Workout = {
+        id: uuidv4(),
+        workoutType: payload.workoutType,
+        number_of_reps: payload.number_of_reps || "0",
+        calories_burned: payload.calories_burned,
+        distance_covered: payload.distance_covered || "0",
+        date: payload.date,
+        createdAt: ic.time(),
+        updatedAt: Opt.None,
+      };
+      workOutStorage.insert(newWorkout.id, newWorkout);
+      return Result.Ok(newWorkout);
+    } catch (error) {
+      return Result.Err<Workout, string>(
+        "Problem occured while adding new workout"
+      );
+    }
   }
-}
  
 
-//update Workout
+//update a Workout by its id
 $update;
 export function updateWorkout(
   id: string,
@@ -231,7 +236,7 @@ export function searchWorkoutByName(name: string): Vec<Workout> {
 }
 
 
-$update; //function to delete workout
+$update; //function to delete  workout
 export function deleteWorkout(id: string): Result<Workout, string> {
   return match(workOutStorage.get(id), {
     Some: (workout) => {
@@ -242,8 +247,11 @@ export function deleteWorkout(id: string): Result<Workout, string> {
   });
 }
 
-$update; //Create a new Food Intake
-export function addFoodIntake(
+
+//Function to create new Food Intake by user id
+$update;
+export function addFoodIntakeByUserId(
+  id: string,
   payload: FoodIntakePayload
 ): Result<FoodIntake, string> {
   if (
@@ -270,7 +278,7 @@ export function addFoodIntake(
   }
 }
 
-$update; //function to food  intake
+$update; //function to update food  intake
 export function updateFoodIntake(
   id: string,
   payload: FoodIntakePayload
@@ -290,12 +298,12 @@ export function updateFoodIntake(
   });
 }
 
-$query; //function to get all calorie intake
+$query; //function to get all food intake
 export function getAllFoodtake(): Vec<FoodIntake> {
   return foodIntakeStorage.values();
 }
 
-$query; //function to get calorie intake by id
+$query; //function to get food intake by id
 export function getFoodIntakeById(id: string): Result<FoodIntake, string> {
   return match(foodIntakeStorage.get(id), {
     Some: (calories) => {
@@ -308,7 +316,7 @@ export function getFoodIntakeById(id: string): Result<FoodIntake, string> {
   });
 }
 
-//function to delete calorie intake
+//function to delete food intake
 $update;
 export function deleteFoodIntake(id: string): Result<FoodIntake, string> {
   return match(foodIntakeStorage.get(id), {

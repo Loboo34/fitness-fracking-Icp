@@ -50,9 +50,9 @@ type _AzleResult_1 = variant { Ok : UserInfo; Err : text };
 type _AzleResult_2 = variant { Ok : Workout; Err : text };
 type _AzleResult_3 = variant { Ok : User; Err : text };
 service : () -> {
-  addFoodIntake : (FoodIntakePayload) -> (_AzleResult);
+  addFoodIntakeByUserId : (text, FoodIntakePayload) -> (_AzleResult);
   addUserInfo : (text, UserInfoPayload) -> (_AzleResult_1);
-  addWorkout : (WorkoutPayload) -> (_AzleResult_2);
+  addWorkoutByUserId : (text, WorkoutPayload) -> (_AzleResult_2);
   deleteFoodIntake : (text) -> (_AzleResult);
   deleteWorkout : (text) -> (_AzleResult_2);
   getAllFoodtake : () -> (vec FoodIntake) query;
@@ -63,6 +63,5 @@ service : () -> {
   initializeUser : (text) -> (_AzleResult_3);
   searchWorkoutByName : (text) -> (vec Workout) query;
   updateFoodIntake : (text, FoodIntakePayload) -> (_AzleResult);
-  updateUserInfo : (text, UserInfoPayload) -> (_AzleResult_1);
   updateWorkout : (text, WorkoutPayload) -> (_AzleResult_2);
 }
